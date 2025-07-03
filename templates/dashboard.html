@@ -1,0 +1,25 @@
+<h1>Admin Dashboard</h1>
+<h2>Members</h2>
+<table>
+<tr><th>Name</th><th>Phone</th><th>Add Payment</th></tr>
+{% for m in members %}
+<tr>
+<td>{{ m.name }}</td><td>{{ m.phone_number }}</td>
+<td>
+<form action="/admin/add-payment" method="post">
+<input type="hidden" name="member_id" value="{{ m.id }}">
+<input type="text" name="amount" placeholder="Amount">
+<input type="date" name="due_date">
+<button>Add</button>
+</form>
+</td>
+</tr>
+{% endfor %}
+</table>
+
+<h2>Add Member</h2>
+<form action="/admin/add-member" method="post">
+<input name="name" placeholder="Name">
+<input name="phone" placeholder="Phone">
+<button>Add Member</button>
+</form>

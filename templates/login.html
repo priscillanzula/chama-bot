@@ -1,0 +1,5 @@
+<form method="post">
+    <input name="username" placeholder="Username"><br>
+    <input name="password" type="password" placeholder="Password"><br>
+    <button type="submit">Login</button>
+</form>
