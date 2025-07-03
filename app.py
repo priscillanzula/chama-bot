@@ -4,8 +4,15 @@ from supabase_client import supabase
 import re
 from datetime import datetime
 
+# First create the app
 app = Flask(__name__)
 
+# Optional root route for health check
+@app.route("/")
+def index():
+    return "✅ Chama Bot is up and running!"
+
+# WhatsApp webhook
 @app.route("/webhook", methods=["POST"])
 def whatsapp_webhook():
     incoming_msg = request.values.get("Body", "").strip().lower()
@@ -25,7 +32,7 @@ def whatsapp_webhook():
         total_due = sum(p["amount_due"] for p in payments)
         msg.body(f"Your total outstanding balance is ${total_due}.")
 
-    elif match := re.match(r"paid\s+(\d+)", incoming_msg):
+    elif match := re.match(r"paid\\s+(\\d+)", incoming_msg):
         amount = float(match.group(1))
         unpaid = supabase.table("payments").select("*").eq("member_id", member_id).eq("is_paid", False).limit(1).execute()
         if unpaid.data:
@@ -41,3 +48,7 @@ def whatsapp_webhook():
         msg.body("Send 'balance' or 'paid <amount>'")
 
     return str(resp)
+
+# Optional: only needed for local testing
+if __name__ == "__main__":
+    app.run(debug=True)
